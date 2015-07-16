@@ -38,13 +38,10 @@ trait EmbedConnection extends Specification {
   override def map(fs: => Fragments) = startMongo ^ fs ^ stoptMongo
 
   private def startMongo = {
-    println("XXXXXXXXXXXX STARTING MONGO")
-
     step(mongodExecutable.start)
   }
 
   private def stoptMongo = {
-    println("XXXXXXXXXXXX STOPING MONGO")
     step(mongodExecutable.stop())
   }
 }

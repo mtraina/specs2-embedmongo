@@ -2,7 +2,7 @@ package com.github.athieriot
 
 import org.specs2.specification.AfterEach
 import reactivemongo.api.MongoDriver
-import reactivemongo.api.collections.bson._
+
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
@@ -19,17 +19,7 @@ trait CleanAfterExample extends AfterEach {
   }
 
   def after = {
-    println("XXXXXXXXXXXXXXXXXXXx in AFTER")
-    val conn = getConn
-    Await.ready(conn.drop(), 1 second)
-//    val colls = Await.result(conn.collectionNames, 2 seconds)
-//    println(s"XXXXXXXXXXXXXXX COLLS: ${colls}")
-
-        Await.ready(conn.collectionNames.map(_.foreach{
-      collection =>
-        println(s"XXXXXXXX REMOVING $collection")
-        conn(collection).drop()
-    }), 5 second)
+    Await.ready(getConn.drop(), 1 second)
   }
 
 }
