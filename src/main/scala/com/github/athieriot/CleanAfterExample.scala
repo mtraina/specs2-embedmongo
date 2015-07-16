@@ -1,16 +1,35 @@
 package com.github.athieriot
 
-import scala.collection.JavaConversions._
-import com.mongodb.{ MongoClient, ServerAddress }
-import org.specs2.specification.AfterExample
+import org.specs2.specification.AfterEach
+import reactivemongo.api.MongoDriver
+import reactivemongo.api.collections.bson._
+import scala.concurrent.Await
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration._
 
-trait CleanAfterExample extends AfterExample {
+trait CleanAfterExample extends AfterEach {
   self: EmbedConnection =>
 
-  lazy val mongoClient = new MongoClient(new ServerAddress(network.getServerAddress(), network.getPort()));
+  def getConn = {
+    val driver = new MongoDriver
+    val db = driver.connection(List(s"127.0.0.1:${network.getPort}"))("testdb")
+    println(s"XXXXXXXXXXXXXXXXXXXXXXXXxx 127.0.0.1:${network.getPort}")
+    Await.ready(db.connection.waitForPrimary(10 seconds), 11 seconds)
+    db
+  }
 
-  def after() {
-    mongoClient.getDatabaseNames().map { mongoClient.getDB(_) }.foreach { _.dropDatabase() }
+  def after = {
+    println("XXXXXXXXXXXXXXXXXXXx in AFTER")
+    val conn = getConn
+    Await.ready(conn.drop(), 1 second)
+//    val colls = Await.result(conn.collectionNames, 2 seconds)
+//    println(s"XXXXXXXXXXXXXXX COLLS: ${colls}")
+
+        Await.ready(conn.collectionNames.map(_.foreach{
+      collection =>
+        println(s"XXXXXXXX REMOVING $collection")
+        conn(collection).drop()
+    }), 5 second)
   }
 
 }

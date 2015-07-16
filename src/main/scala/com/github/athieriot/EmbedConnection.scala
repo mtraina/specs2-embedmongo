@@ -1,27 +1,28 @@
 package com.github.athieriot
 
-import de.flapdoodle.embed._
-import process.runtime.Network
-import mongo._
-import config._
-import distribution._
-import org.specs2.specification._
-import org.specs2.mutable.SpecificationLike
+import de.flapdoodle.embed.mongo._
+import de.flapdoodle.embed.mongo.config._
+import de.flapdoodle.embed.mongo.distribution._
+import de.flapdoodle.embed.process.runtime.Network
 import org.specs2.main.Arguments
+import org.specs2.mutable.{Specification, SpecificationLike}
+import org.specs2.specification.core.{Fragment, Fragments}
 
-trait EmbedConnection extends FragmentsBuilder {
+trait EmbedConnection extends Specification {
   self: SpecificationLike =>
   isolated
+
+  def sequentialyIsolated: Arguments = args(isolated = true, sequential = true)
 
   override def sequential: Arguments = args(isolated = false, sequential = true)
 
   override def isolated: Arguments = args(isolated = true, sequential = false)
 
   //Override this method to personalize testing port
-  def embedConnectionPort(): Int = { 12345 }
+  def embedConnectionPort: Int = 12345
 
   //Override this method to personalize MongoDB version
-  def embedMongoDBVersion(): Version.Main = { Version.Main.PRODUCTION }
+  def embedMongoDBVersion: Version.Main = Version.Main.PRODUCTION
 
   lazy val network = new Net(embedConnectionPort, Network.localhostIsIPv6)
 
@@ -36,11 +37,14 @@ trait EmbedConnection extends FragmentsBuilder {
 
   override def map(fs: => Fragments) = startMongo ^ fs ^ stoptMongo
 
-  private def startMongo() = {
-    Example("Start Mongo", { mongodExecutable.start; success })
+  private def startMongo = {
+    println("XXXXXXXXXXXX STARTING MONGO")
+
+    step(mongodExecutable.start)
   }
 
-  private def stoptMongo() = {
-    Example("Stop Mongo", { mongodExecutable.stop; success })
+  private def stoptMongo = {
+    println("XXXXXXXXXXXX STOPING MONGO")
+    step(mongodExecutable.stop())
   }
 }

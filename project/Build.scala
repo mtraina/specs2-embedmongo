@@ -3,14 +3,14 @@ import sbt.Keys._
 
 object ProjectBuild extends Build {
 
-  lazy val buildVersion =  "0.7.0"
+  lazy val buildVersion =  "0.7.1"
 
   lazy val root = Project(id = "specs2-embedmongo", base = file("."), settings = Project.defaultSettings).settings(
     organization := "com.github.athieriot",
     description := "Specs2 helper to configure a EmbedMongo based instance",
     version := buildVersion,
-    scalaVersion := "2.10.4",
-    crossScalaVersions := Seq("2.10.4", "2.11.1"),
+    scalaVersion := "2.11.7",
+    crossScalaVersions := Seq("2.10.4", "2.11.7"),
 
     resolvers += "Typesafe Releases" at "http://repo.typesafe.com/typesafe/releases/",
     resolvers += "Typesafe Snapshots" at "http://repo.typesafe.com/typesafe/snapshots/",
@@ -19,10 +19,9 @@ object ProjectBuild extends Build {
     resolvers += "Sonatype releases" at "https://oss.sonatype.org/content/repositories/releases/",
 
     libraryDependencies <++= scalaVersion(sv => Seq(
-      "de.flapdoodle.embed" % "de.flapdoodle.embed.mongo" % "1.46.0",
-      "org.specs2"  %% "specs2" % "2.3.12",
-      "org.mongodb" %% "casbah-core" % "2.7.2" % "provided",
-      "com.novus" %% "salat-core" % "1.9.8" % "test",
+      "de.svenkubiak" % "embedded-mongodb" % "4.2.0",
+      "org.specs2" %% "specs2-core" % "3.6.2" % "provided",
+      "org.reactivemongo" %% "reactivemongo" % "0.11.2" % "provided",
       "junit" % "junit" % "4.11" % "test"
       )),
 
