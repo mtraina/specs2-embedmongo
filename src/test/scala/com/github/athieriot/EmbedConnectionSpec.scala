@@ -36,6 +36,7 @@ class EmbedConnectionSpec extends Specification with EmbedConnection with MongoI
 
     "be able to save a Model V" in {
       val coll = getColl
+      Await.ready(coll.insert(BSONDocument("hello" -> "World")), 1 second)
       Await.result(coll.count(None), 5 second) must be_==(5)
     }
   }
