@@ -13,7 +13,6 @@ trait CleanAfterExample extends AfterEach {
   def getConn = {
     val driver = new MongoDriver
     val db = driver.connection(List(s"127.0.0.1:${network.getPort}"))("testdb")
-    println(s"XXXXXXXXXXXXXXXXXXXXXXXXxx 127.0.0.1:${network.getPort}")
     Await.ready(db.connection.waitForPrimary(10 seconds), 11 seconds)
     db
   }
