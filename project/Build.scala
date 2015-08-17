@@ -3,7 +3,7 @@ import sbt.Keys._
 
 object ProjectBuild extends Build {
 
-  lazy val buildVersion =  "0.7.1"
+  lazy val buildVersion =  "0.8.0"
 
   lazy val root = Project(id = "specs2-embedmongo", base = file("."), settings = Project.defaultSettings).settings(
     organization := "com.github.athieriot",
@@ -51,12 +51,7 @@ object ProjectBuild extends Build {
         </developer>
       </developers>
     ),
-    publishTo <<= version { version: String =>
-      val nexus = "https://oss.sonatype.org/"
-      if (version.trim.endsWith("SNAPSHOT"))
-        Some("snapshots" at nexus + "content/repositories/snapshots")
-      else
-        Some("releases" at nexus + "service/local/staging/deploy/maven2")
-    }
+    publishTo := Some("cody" at "http://cody:8082/nexus/content/repositories/releases"),
+    credentials += Credentials(Path.userHome / ".sbt" / "sonatype.credentials")
   )
 }
