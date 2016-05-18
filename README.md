@@ -24,7 +24,7 @@ You can change thow default values:
 
 Modify `project/Build.scala` and add
 
-`"com.github.athieriot" %% "specs2-embedmongo" % "0.8.0"`
+`"com.github.athieriot" %% "specs2-embedmongo" % "0.8.1"`
 
 
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/athieriot/specs2-embedmongo/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
