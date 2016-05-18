@@ -3,7 +3,7 @@ import sbt.Keys._
 
 object ProjectBuild extends Build {
 
-  lazy val buildVersion =  "0.8.0"
+  lazy val buildVersion =  "0.8.1"
 
   lazy val root = Project(id = "specs2-embedmongo", base = file("."), settings = Project.defaultSettings).settings(
     organization := "com.github.athieriot",
@@ -19,10 +19,10 @@ object ProjectBuild extends Build {
     resolvers += "Sonatype releases" at "https://oss.sonatype.org/content/repositories/releases/",
 
     libraryDependencies <++= scalaVersion(sv => Seq(
-      "de.svenkubiak" % "embedded-mongodb" % "4.2.0",
-      "org.specs2" %% "specs2-core" % "3.6.2" % "provided",
-      "org.reactivemongo" %% "reactivemongo" % "0.11.2" % "provided",
-      "junit" % "junit" % "4.11" % "test"
+      "de.svenkubiak" % "embedded-mongodb" % "4.2.9",
+      "org.specs2" %% "specs2-core" % "3.8.3" % "provided",
+      "org.reactivemongo" %% "reactivemongo" % "0.11.11" % "provided",
+      "junit" % "junit" % "4.12" % "test"
       )),
 
     parallelExecution in Test := false,
