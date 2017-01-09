@@ -21,7 +21,7 @@ object ProjectBuild extends Build {
     libraryDependencies <++= scalaVersion(sv => Seq(
       "de.svenkubiak" % "embedded-mongodb" % "4.2.9",
       "org.specs2" %% "specs2-core" % "3.8.2" % "provided",
-      "org.reactivemongo" %% "reactivemongo" % "0.11.8" % "provided",
+      "org.reactivemongo" %% "reactivemongo" % "0.11.12" % "provided",
       "junit" % "junit" % "4.12" % "test"
       )),
 
