@@ -3,22 +3,35 @@ package com.github.athieriot
 import org.specs2.specification.AfterEach
 import reactivemongo.api.MongoDriver
 
-import scala.concurrent.Await
+import scala.concurrent.{Await, Future}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
+
+import com.github.athieriot.util.RichMongoConnection._
 
 trait CleanAfterExample extends AfterEach {
   self: EmbedConnection =>
 
-  def getConn = {
+  private def getConn = {
     val driver = new MongoDriver
-    val db = driver.connection(List(s"127.0.0.1:${network.getPort}"))("testdb")
-    Await.ready(db.connection.waitForPrimary(10 seconds), 11 seconds)
-    db
+    val address = "127.0.0.1:" + network.getPort
+    val conn = driver.connection(address :: Nil)
+    conn
   }
 
   def after = {
-    Await.ready(getConn.drop(), 1 second)
+    val conn = getConn
+    val futureDropResults = for {
+      dbNames <- conn.listDatabases()
+      dbs <- Future.traverse(dbNames)(conn.database(_))
+      drops <- Future.traverse(dbs)(_.drop())
+    } yield {
+      drops
+    }
+    futureDropResults onFailure { case _ =>
+      throw new RuntimeException("couldn't drop all DBs")
+    }
+    Await.ready(futureDropResults, 1 second)
   }
 
 }
